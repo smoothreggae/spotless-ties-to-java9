@@ -1,0 +1,37 @@
+plugins {
+    id "java-library"
+    id "com.diffplug.spotless" version "5.17.0"
+}
+
+repositories {
+    mavenCentral()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+spotless {
+    java {
+        target 'src/main/**/*.java', 'src/test/**/*.java'
+        endWithNewline()
+        indentWithSpaces(4)
+        licenseHeaderFile rootProject.file('src/spotless/license-template.java')
+        trimTrailingWhitespace()
+    }
+    format 'misc', {
+        target project.fileTree(project.rootDir) {
+            include '**/.gitignore', '**/*.gradle', '**/*.json',
+                    '**/*.md', '**/*.properties', '**/*.xml', '**/*.yml'
+            exclude 'build/**'
+            exclude 'bin/**'
+            exclude 'out/**'
+            exclude '.gradle/**'
+            exclude '.idea/**'
+            exclude '.vscode/**'
+        }
+        endWithNewline()
+        indentWithSpaces(4)
+        trimTrailingWhitespace()
+    }
+}
